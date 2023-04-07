@@ -10,6 +10,8 @@ LDPARAMS = -melf_i386
 objects = loader.o \
 		  gdt.o \
 		  port.o \
+		  interrupts.o \
+		  interruptstubs.o \
           kernel.o 
 
 
