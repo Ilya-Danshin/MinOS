@@ -12,6 +12,7 @@ objects = loader.o \
 		  port.o \
 		  interrupts.o \
 		  interruptstubs.o \
+		  keyboard.o \
           kernel.o 
 
 
