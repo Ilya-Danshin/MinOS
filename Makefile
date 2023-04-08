@@ -3,7 +3,7 @@
 # sudo apt-get install VirtualBox grub-common xorriso 
 # sudo apt install grub-pc-bin 
 
-GCCPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore
+GCCPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
@@ -13,6 +13,7 @@ objects = loader.o \
 		  interrupts.o \
 		  interruptstubs.o \
 		  keyboard.o \
+		  mouse.o \
           kernel.o 
 
 
