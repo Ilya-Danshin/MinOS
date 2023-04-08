@@ -9,9 +9,10 @@ LDPARAMS = -melf_i386
 
 objects = loader.o \
 		  gdt.o \
+		  driver.o \
 		  port.o \
-		  interrupts.o \
 		  interruptstubs.o \
+		  interrupts.o \
 		  keyboard.o \
 		  mouse.o \
           kernel.o 
