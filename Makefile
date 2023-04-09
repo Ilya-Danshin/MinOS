@@ -16,6 +16,10 @@ objects = obj/loader.o \
           obj/drivers/keyboard.o \
           obj/drivers/mouse.o \
 		  obj/drivers/vga.o \
+		  obj/gui/widget.o \
+		  obj/gui/window.o \
+		  obj/gui/desktop.o \
+		  obj/gui/render.o \
           obj/kernel.o
 
 
