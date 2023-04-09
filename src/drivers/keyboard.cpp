@@ -1,5 +1,8 @@
-#include "keyboard.h"
+#include <drivers/keyboard.h>
 
+using namespace myos::common;
+using namespace myos::drivers;
+using namespace myos::hardwarecommunication;
 
 
 KeyboardEventHandler::KeyboardEventHandler()
@@ -13,10 +16,6 @@ void KeyboardEventHandler::OnKeyDown(char)
 void KeyboardEventHandler::OnKeyUp(char)
 {
 }
-
-
-
-
 
 KeyboardDriver::KeyboardDriver(InterruptManager* manager, KeyboardEventHandler *handler)
 : InterruptHandler(manager, 0x21),
@@ -48,8 +47,10 @@ void KeyboardDriver::Activate()
 uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
 {
     uint8_t key = dataport.Read();
+    
     if(handler == 0)
         return esp;
+    
     if(key < 0x80)
     {
         switch(key)
@@ -101,9 +102,11 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
             case 0x39: handler->OnKeyDown(' '); break;
 
             default:
+            {
                 printf("KEYBOARD 0x");
                 printfHex(key);
                 break;
+            }
         }
     }
     return esp;
