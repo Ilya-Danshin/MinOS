@@ -1,12 +1,11 @@
-#include "interrupts.h"
+#include <hardwarecommunication/interrupts.h>
+
+using namespace myos::common;
+using namespace myos::hardwarecommunication;
 
 
 void printf(char* str);
 void printfHex(uint8_t);
-
-
-
-
 
 InterruptHandler::InterruptHandler(InterruptManager* interruptManager, uint8_t InterruptNumber)
 {
