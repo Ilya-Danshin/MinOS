@@ -8,6 +8,7 @@
 #include <gui/desktop.h>
 #include <gui/window.h>
 #include <gui/render.h>
+#include <memorymanagement.h>
 
 using namespace myos;
 using namespace myos::common;
@@ -15,7 +16,7 @@ using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
 using namespace myos::gui;
 
-#define GRAPHICSMODE
+//#define GRAPHICSMODE
 
 void clear_screen() {
     static uint16_t* VideoMemory = (uint16_t*)0xb8000;
@@ -150,6 +151,26 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
     printf("Hello World!\n");
 
     GlobalDescriptorTable gdt;
+
+    uint32_t* memupper = (uint32_t*)(((size_t)multiboot_structure) + 8);
+    size_t heap = 10*1024*1024;
+    MemoryManager memoryManager(heap, (*memupper)*1024 - heap - 10*1024);
+    
+    printf("heap: 0x");
+    printfHex((heap >> 24) & 0xFF);
+    printfHex((heap >> 16) & 0xFF);
+    printfHex((heap >> 8 ) & 0xFF);
+    printfHex((heap      ) & 0xFF);
+    
+    void* allocated = memoryManager.malloc(1024);
+    printf("\nallocated: 0x");
+    printfHex(((size_t)allocated >> 24) & 0xFF);
+    printfHex(((size_t)allocated >> 16) & 0xFF);
+    printfHex(((size_t)allocated >> 8 ) & 0xFF);
+    printfHex(((size_t)allocated      ) & 0xFF);
+    printf("\n");
+    
+    
     InterruptManager interrupts(0x20, &gdt);
     
     printf("Initializing Hardware, Stage 1\n");
@@ -207,10 +228,10 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
     {
         #ifdef GRAPHICSMODE
             //render new frame
-        desktop.Draw(&rend);
+            desktop.Draw(&rend);
 
-        //display rendered frame
-        rend.display(&vga);
+            //display rendered frame
+            rend.display(&vga);
         #endif
     }
 }
