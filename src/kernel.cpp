@@ -16,7 +16,7 @@ using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
 using namespace myos::gui;
 
-//#define GRAPHICSMODE
+#define GRAPHICSMODE
 
 void clear_screen() {
     static uint16_t* VideoMemory = (uint16_t*)0xb8000;
@@ -215,10 +215,6 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
 
     #ifdef GRAPHICSMODE
         vga.SetMode(320,200,8);
-        Window win1(&desktop, 10,10,20,20, 0xA8,0x00,0x00);
-        desktop.AddChild(&win1);
-        Window win2(&desktop, 40,15,30,30, 0x00,0xA8,0x00);
-        desktop.AddChild(&win2);
     #endif
 
 
