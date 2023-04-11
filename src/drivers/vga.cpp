@@ -1,9 +1,9 @@
 #include <drivers/vga.h>
+#include <drivers/vincent.h>
 
 using namespace myos::common;
 using namespace myos::drivers;
 
-                       
 VideoGraphicsArray::VideoGraphicsArray() : 
     miscPort(0x3c2),
     crtcIndexPort(0x3d4),
@@ -151,4 +151,54 @@ void VideoGraphicsArray::FillRectangle(uint32_t x, uint32_t y, uint32_t w, uint3
     for(int32_t Y = y; Y < y+h; Y++)
         for(int32_t X = x; X < x+w; X++)
             PutPixel(X, Y, r, g, b);
+}
+
+ void VideoGraphicsArray::DrawRectangle(common::uint32_t x, common::uint32_t y, common::uint32_t w, common::uint32_t h,  
+                                           common::uint8_t r, common::uint8_t g, common::uint8_t b)
+{
+    // Draw top line
+    int32_t Y = y;
+    for(int32_t X = x; X < x+w; X++) {
+        PutPixel(X, Y, r, g, b);
+    }
+
+    // Draw bottom line
+    Y += h;
+    for(int32_t X = x; X < x+w; X++) {
+        PutPixel(X, Y, r, g, b);
+    }
+
+    // Draw left line
+    int32_t X = x;
+    for(int32_t Y = y; Y < y+h; Y++) {
+        PutPixel(X, Y, r, g, b);
+    }
+
+    // Draw right line
+    X += w;
+        for(int32_t Y = y; Y < y+h; Y++) {
+        PutPixel(X, Y, r, g, b);
+    }
+}
+
+void VideoGraphicsArray::DrawString(common::string str, common::uint32_t x, common::uint32_t y, common::uint8_t r, common::uint8_t g, common::uint8_t b)
+{
+    for (int32_t i = 0; str[i] != '\0'; i++) {
+        DrawLetter(str[i], x + 8*i, y, r, g, b);
+    }
+}
+void VideoGraphicsArray::DrawLetter(char c, common::uint32_t x, common::uint32_t y, common::uint8_t r, common::uint8_t g, common::uint8_t b)
+{
+    uint8_t* bitmap = vincent_data[c];
+
+    // font 8x8 so borders are (y + 8) and (x + 8)
+    for (int8_t i = 0; i < 8; i++) {
+        
+        for (int8_t j = 7; j >= 0; j--) {
+            if((bitmap[i] >> j) & 0x01) {
+                PutPixel(x + 7 - j, y + i, r, g, b);
+            }
+        }
+    }
+
 }

@@ -12,7 +12,7 @@ namespace myos
         class Desktop : public CompositeWidget, public myos::drivers::MouseEventHandler
         {
         protected:
-            
+            CompositeWidget* menu;
         public:
             Desktop(common::int32_t w, common::int32_t h,
                     common::uint8_t r, common::uint8_t g, common::uint8_t b);
@@ -22,7 +22,7 @@ namespace myos
             
             void OnKeyDown(char c);
         };
-        
+
     }
 }
 
