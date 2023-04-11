@@ -14,3 +14,7 @@ Build:
 After this u got an kernel.iso file that can be run like this:
 
     qemu-system-i386.exe kernel.iso
+
+___
+### Menu navigation
+For navigation in menu use keys `w` and `s`. For confirm use `Enter`.
