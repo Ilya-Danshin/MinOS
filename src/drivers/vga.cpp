@@ -153,8 +153,8 @@ void VideoGraphicsArray::FillRectangle(uint32_t x, uint32_t y, uint32_t w, uint3
             PutPixel(X, Y, r, g, b);
 }
 
- void VideoGraphicsArray::DrawRectangle(common::uint32_t x, common::uint32_t y, common::uint32_t w, common::uint32_t h,  
-                                           common::uint8_t r, common::uint8_t g, common::uint8_t b)
+ void VideoGraphicsArray::DrawRectangle(uint32_t x, uint32_t y, uint32_t w, uint32_t h,  
+                                           uint8_t r, uint8_t g, uint8_t b)
 {
     // Draw top line
     int32_t Y = y;
@@ -181,13 +181,13 @@ void VideoGraphicsArray::FillRectangle(uint32_t x, uint32_t y, uint32_t w, uint3
     }
 }
 
-void VideoGraphicsArray::DrawString(common::string str, common::uint32_t x, common::uint32_t y, common::uint8_t r, common::uint8_t g, common::uint8_t b)
+void VideoGraphicsArray::DrawString(string str, uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b)
 {
     for (int32_t i = 0; str[i] != '\0'; i++) {
         DrawLetter(str[i], x + 8*i, y, r, g, b);
     }
 }
-void VideoGraphicsArray::DrawLetter(char c, common::uint32_t x, common::uint32_t y, common::uint8_t r, common::uint8_t g, common::uint8_t b)
+void VideoGraphicsArray::DrawLetter(char c, uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b)
 {
     uint8_t* bitmap = vincent_data[c];
 
@@ -202,3 +202,60 @@ void VideoGraphicsArray::DrawLetter(char c, common::uint32_t x, common::uint32_t
     }
 
 }
+
+ void VideoGraphicsArray::DrawCircle(uint32_t x, uint32_t y, uint32_t rad, uint8_t r, uint8_t g, uint8_t b) 
+ {
+    if (rad > 5)
+        return;
+
+    if (rad == 1) {
+        PutPixel(x, y, r, g, b);
+    } else if (rad == 2) {
+        PutPixel(x - 1, y - 1, r, g, b);
+        PutPixel(x, y - 1, r, g, b);
+        PutPixel(x - 1, y, r, g, b);
+        PutPixel(x, y, r, g, b);
+    } else if (rad == 3) {
+        FillRectangle(x - 2, y - 2, 4, 4, r, g, b);
+        for (int i = -2; i < 2; i++)
+            PutPixel(x - 3, y + i, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x + 2, y + i, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x - i - 1, y - 3, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x - i - 1, y + 2, r, g, b);
+
+    } else if (rad == 4) {
+        FillRectangle(x - 3, y - 3, 6, 6, r, g, b);
+        for (int i = -2; i < 2; i++)
+            PutPixel(x - 4, y + i, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x + 3, y + i, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x - i - 1, y - 4, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x - i - 1, y + 3, r, g, b);
+    } else if (rad == 5) {
+        FillRectangle(x - 4, y - 4, 8, 8, r, g, b);
+
+        for (int i = -2; i < 2; i++)
+            PutPixel(x - 5, y + i, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x + 4, y + i, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x - i - 1, y - 5, r, g, b);
+
+        for (int i = -2; i < 2; i++) 
+            PutPixel(x - i - 1, y + 4, r, g, b);
+
+    }
+ }

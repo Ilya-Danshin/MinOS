@@ -66,7 +66,7 @@ namespace myos
             virtual void OnMouseDown(common::int32_t x, common::int32_t y, common::uint8_t button);
             virtual void OnMouseUp(common::int32_t x, common::int32_t y, common::uint8_t button);
             virtual void OnMouseMove(common::int32_t oldx, common::int32_t oldy, common::int32_t newx, common::int32_t newy);
-            
+
             virtual void OnKeyDown(char);
             virtual void OnKeyUp(char);
         };
