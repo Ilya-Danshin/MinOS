@@ -2,6 +2,7 @@
 #include <gdt.h>
 #include <hardwarecommunication/interrupts.h>
 #include <drivers/driver.h>
+#include <drivers/timer.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
 #include <drivers/vga.h>
@@ -10,13 +11,14 @@
 #include <gui/render.h>
 #include <memorymanagement.h>
 
+
 using namespace myos;
 using namespace myos::common;
 using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
 using namespace myos::gui;
 
-#define GRAPHICSMODE
+//#define GRAPHICSMODE
 
 void clear_screen() {
     static uint16_t* VideoMemory = (uint16_t*)0xb8000;
@@ -165,7 +167,11 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
     #endif
     
     DriverManager drvManager;
-    
+
+        TimerEventHandler timerhandler;
+        TimerDriver timer(&interrupts, &timerhandler, 50);
+        drvManager.AddDriver(&timer);
+
         #ifdef GRAPHICSMODE
             KeyboardDriver keyboard(&interrupts, &desktop);
         #else
