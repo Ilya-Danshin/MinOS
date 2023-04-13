@@ -20,6 +20,7 @@ objects = obj/loader.o \
 		  obj/drivers/vga.o \
 		  obj/gui/widget.o \
 		  obj/gui/window.o \
+		  obj/game/arkanoid.o \
 		  obj/gui/menu.o \
 		  obj/gui/desktop.o \
 		  obj/gui/render.o \

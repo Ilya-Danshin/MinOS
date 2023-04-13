@@ -22,6 +22,11 @@ Widget::Widget(Widget* parent, int32_t x, int32_t y, int32_t w, int32_t h,
 Widget::~Widget()
 {
 }
+
+Widget* Widget::GetParent()
+{
+    return this->parent;
+}
             
 void Widget::GetFocus(Widget* widget)
 {
@@ -73,6 +78,7 @@ void Widget::OnMouseMove(common::int32_t oldx, common::int32_t oldy, common::int
 
 
 
+
 CompositeWidget::CompositeWidget(Widget* parent,
                    common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
                    common::uint8_t r, common::uint8_t g, common::uint8_t b)
@@ -99,6 +105,20 @@ bool CompositeWidget::AddChild(Widget* child)
         return false;
     children[numChildren++] = child;
     return true;
+}
+
+void CompositeWidget::DeleteChild(Widget* child)
+{
+    for (uint8_t i = 0; i < numChildren; i++) {
+        if (children[i] == child) {
+            for (uint8_t j = i + 1; j < numChildren; j++, i++) {
+                children[i] = children[j];
+            }
+            children[i] = 0;
+            numChildren--;
+            break;
+        }
+    }
 }
 
 

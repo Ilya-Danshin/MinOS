@@ -31,6 +31,8 @@ namespace myos
                    common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
                    common::uint8_t r, common::uint8_t g, common::uint8_t b);
             ~Widget();
+
+            virtual Widget* GetParent(); 
             
             virtual void GetFocus(Widget* widget);
             virtual void ModelToScreen(common::int32_t &x, common::int32_t& y);
@@ -58,6 +60,7 @@ namespace myos
             
             virtual void GetFocus(Widget* widget);
             virtual bool AddChild(Widget* child);
+            virtual void DeleteChild(Widget* child);
             
             virtual void Draw(common::GraphicsContext* gc);
             virtual void OnMouseDown(common::int32_t x, common::int32_t y, common::uint8_t button);

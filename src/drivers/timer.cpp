@@ -4,9 +4,6 @@ using namespace myos::common;
 using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
 
-void printf(char*);
-void printfHex(uint8_t);
-
 TimerEventHandler::TimerEventHandler() 
 {
 }
@@ -14,9 +11,9 @@ TimerEventHandler::TimerEventHandler()
 void TimerEventHandler::Tick() {
     this->tick++;
 
-    printf("Tick ");
-    printfHex(tick);
-    printf("\n");
+    //printf("Tick ");
+    //printfHex(tick);
+    //printf("\n");
 }
 
 TimerDriver::TimerDriver(InterruptManager* manager, TimerEventHandler *handler, uint32_t freq)

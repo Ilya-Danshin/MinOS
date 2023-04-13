@@ -10,7 +10,7 @@ namespace myos
     namespace gui
     {
 
-        class MenuPunkt : public Widget 
+        class MenuPunkt : public CompositeWidget 
         {
             public:
             MenuPunkt(Widget* parent,
@@ -69,8 +69,7 @@ namespace myos
             Cursor* cursor;
 
             common::int8_t num_of_punkts = 0;
-            common::int8_t cur_punkt = 0;
-            
+            common::int8_t cur_punkt = 0;            
         public:
             Menu(Widget* parent,
                    common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,

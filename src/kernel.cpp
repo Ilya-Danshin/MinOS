@@ -18,7 +18,7 @@ using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
 using namespace myos::gui;
 
-//#define GRAPHICSMODE
+#define GRAPHICSMODE
 
 void clear_screen() {
     static uint16_t* VideoMemory = (uint16_t*)0xb8000;
@@ -144,7 +144,6 @@ extern "C" void callConstructors()
     for(constructor* i = &start_ctors; i != &end_ctors; i++)
         (*i)();
 }
-
 
 
 extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot_magic*/)
