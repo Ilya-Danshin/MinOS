@@ -22,5 +22,5 @@ RandomGenerator::~RandomGenerator()
 
 int64_t RandomGenerator::Generate()
 {
-    last_value = last_value * last_value + 17 * last_value + 13;
+    last_value = a + last_value + c;
 }

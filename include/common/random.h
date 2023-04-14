@@ -19,6 +19,8 @@ namespace myos
             int64_t seed;
 
             int64_t last_value;
+            int64_t a = 6364136223846793005;
+            int64_t c = 1;
         };
     }
 

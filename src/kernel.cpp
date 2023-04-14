@@ -145,7 +145,6 @@ extern "C" void callConstructors()
         (*i)();
 }
 
-
 extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot_magic*/)
 {
     clear_screen();
@@ -166,7 +165,7 @@ extern "C" void kernelMain(const void* multiboot_structure, uint32_t /*multiboot
     #endif
     
     DriverManager drvManager;
-
+        
         TimerEventHandler timerhandler;
         TimerDriver timer(&interrupts, &timerhandler, 50);
         drvManager.AddDriver(&timer);

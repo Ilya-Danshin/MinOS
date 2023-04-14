@@ -4,12 +4,17 @@ using namespace myos::common;
 using namespace myos::drivers;
 using namespace myos::hardwarecommunication;
 
+
+//void printf(char*);
+//void printfHex(uint8_t);
+
 TimerEventHandler::TimerEventHandler() 
 {
 }
 
 void TimerEventHandler::Tick() {
-    this->tick++;
+    //this->tick++;
+    tick++;
 
     //printf("Tick ");
     //printfHex(tick);

@@ -9,7 +9,7 @@ namespace myos
     namespace game
     {
         
-        class Platform : public gui::CompositeWidget
+        class Platform : public gui::Widget
         {
         public:
             Platform(gui::Widget* parent,
@@ -24,12 +24,6 @@ namespace myos
             common::uint32_t x_right_border;
             
             common::int8_t speed;
-
-            // mode = 0 - start platform moving
-            // mode = 1 - choose ball vector
-            // mode = 2 - game
-            common::int8_t mode;
-
 
             void MoveLeft();
             void MoveRight();
@@ -46,14 +40,27 @@ namespace myos
             Ball(gui::Widget* parent,
                    common::int32_t x, common::int32_t y, common::int32_t rad,
                    common::uint8_t r, common::uint8_t g, common::uint8_t b, 
-                   common::int8_t vector_x, common::int8_t vector_y);
+                   common::int8_t vector_x, common::int8_t vector_y, common::int8_t speed);
             ~Ball();
 
             void Draw(common::GraphicsContext* gc);
+
+            void MoveHandler();
+
+            common::int32_t GetX();
+            common::int32_t GetY();
+            common::int32_t GetRad();
+
+            void ChangeVectorX();
+            void ChangeVectorY();
         private:
             common::int8_t vector_x;
             common::int8_t vector_y;
             common::int32_t rad;
+
+            common::int8_t speed;
+
+            common::uint64_t cnt = 0;
         };
         
         class ArkanoidGame : public gui::CompositeWidget
@@ -64,8 +71,12 @@ namespace myos
                    common::uint8_t r, common::uint8_t g, common::uint8_t b);
             ~ArkanoidGame();
 
+            void Draw(common::GraphicsContext* gc);
+
+            void SetBall(Ball* ball);
         private:
             Platform* platform;
+            Ball* ball;
         };
     }
 }
