@@ -6,14 +6,17 @@
 #include <drivers/driver.h>
 #include <hardwarecommunication/port.h>
 
+static myos::common::uint64_t tick = 0;
+
 namespace myos 
 {
     namespace drivers 
     {
+                        
         class TimerEventHandler
         {
         private:
-            myos::common::uint64_t tick = 0;
+            
         public:
             TimerEventHandler();
 

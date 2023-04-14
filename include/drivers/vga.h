@@ -46,6 +46,7 @@ namespace myos {
 
                 virtual void DrawString(common::string str, common::uint32_t x, common::uint32_t y, common::uint8_t r, common::uint8_t g, common::uint8_t b);
                 virtual void DrawLetter(char c, common::uint32_t x, common::uint32_t y, common::uint8_t r, common::uint8_t g, common::uint8_t b);
+                virtual void DrawCircle(common::uint32_t x, common::uint32_t y, common::uint32_t rad, common::uint8_t r, common::uint8_t g, common::uint8_t b);
             };
         }
 }

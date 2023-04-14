@@ -2,10 +2,12 @@
 #include <gui/menu.h>
 #include <drivers/vga.h>
 #include <memorymanagement.h>
+#include <game/arkanoid.h>
 
 using namespace myos;
 using namespace myos::common;
 using namespace myos::gui;
+using namespace myos::game;
 
 #define CURSOR_WIDTH 20
 #define MENU_PUNKT_HEIGHT 20
@@ -15,6 +17,9 @@ Menu::Menu(Widget* parent,
                    common::uint8_t r, common::uint8_t g, common::uint8_t b)
 : CompositeWidget(parent, x, y, w, h, r, g, b)
 {
+    // Save Desktop 
+    this->parent = parent;
+    
     // Add title
     int32_t X = 0;
     int32_t Y = 0;
@@ -46,8 +51,10 @@ Menu::~Menu()
 }
 
 void Menu::Draw(common::GraphicsContext* gc){
-    CompositeWidget::Draw(gc);
-    gc->DrawRectangle(x, y, w, h, 0xFF, 0xFF, 0xFF);
+    //if(is_visible){
+        CompositeWidget::Draw(gc);
+        gc->DrawRectangle(x, y, w, h, 0xFF, 0xFF, 0xFF);
+    //}
 }
 
 void Menu::OnKeyDown(char c)
@@ -77,6 +84,11 @@ void Menu::OnKeyDown(char c)
     cursor->MoveCursor(cur_punkt);
 }
 
+void Menu::SetVisible(bool is_visible)
+{
+    this->is_visible = is_visible;
+}
+
 
 Title::Title(Widget* parent,
             common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
@@ -97,8 +109,9 @@ void Title::Draw(common::GraphicsContext* gc)
 MenuPunkt::MenuPunkt(Widget* parent,
                    common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
                    common::uint8_t r, common::uint8_t g, common::uint8_t b)
-:Widget(parent, x, y, w, h, r, g, b)
+:CompositeWidget(parent, x, y, w, h, r, g, b)
 {
+    this->parent = parent;
 }
 
 MenuPunkt::~MenuPunkt()
@@ -147,10 +160,17 @@ void GamePunkt::Draw(common::GraphicsContext* gc)
 
 void GamePunkt::Run()
 {
-    // TODO: Call to start game
-    r = ~r;
-    g = ~g;
-    b = ~b;
+    CompositeWidget* desktop = (CompositeWidget*)this->parent->GetParent();
+    
+    ArkanoidGame* game = new ArkanoidGame(desktop, 0, 0, 320, 200, 0x00, 0x00, 0x00);
+    desktop->AddChild((CompositeWidget*)game);
+    desktop->GetFocus((CompositeWidget*)game);
+
+    // Delete menu from Desktop
+    desktop->DeleteChild(this->parent);
+    delete (void*)this->parent;
+    //((Menu*)this->parent)->SetVisible(false);
+
 }
 
 Cursor::Cursor(Widget* parent,

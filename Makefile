@@ -14,12 +14,14 @@ objects = obj/loader.o \
           obj/hardwarecommunication/port.o \
           obj/hardwarecommunication/interruptstubs.o \
           obj/hardwarecommunication/interrupts.o \
+		  obj/common/random.o \
 		  obj/drivers/timer.o \
           obj/drivers/keyboard.o \
           obj/drivers/mouse.o \
 		  obj/drivers/vga.o \
 		  obj/gui/widget.o \
 		  obj/gui/window.o \
+		  obj/game/arkanoid.o \
 		  obj/gui/menu.o \
 		  obj/gui/desktop.o \
 		  obj/gui/render.o \

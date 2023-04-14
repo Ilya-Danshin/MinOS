@@ -22,6 +22,11 @@ Widget::Widget(Widget* parent, int32_t x, int32_t y, int32_t w, int32_t h,
 Widget::~Widget()
 {
 }
+
+Widget* Widget::GetParent()
+{
+    return this->parent;
+}
             
 void Widget::GetFocus(Widget* widget)
 {
@@ -101,11 +106,27 @@ bool CompositeWidget::AddChild(Widget* child)
     return true;
 }
 
+void CompositeWidget::DeleteChild(Widget* child)
+{
+    for (uint8_t i = 0; i < numChildren; i++) {
+        if (children[i] == child) {
+            for (uint8_t j = i + 1; j < numChildren; j++, i++) {
+                children[i] = children[j];
+            }
+            children[i] = 0;
+            numChildren--;
+            break;
+        }
+    }
+}
+
 
 void CompositeWidget::Draw(GraphicsContext* gc)
 {
     Widget::Draw(gc);
-    for(int i = numChildren-1; i >= 0; --i)
+    //for(int i = numChildren-1; i >= 0; --i)
+    //    children[i]->Draw(gc);
+    for(int i = 0; i < numChildren; i++)
         children[i]->Draw(gc);
 }
 
