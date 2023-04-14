@@ -1,6 +1,7 @@
 #include <game/arkanoid.h>
 #include <common/random.h>
 #include <drivers/timer.h>
+#include <gui/menu.h>
 
 using namespace myos;
 using namespace myos::gui;
@@ -17,7 +18,40 @@ using namespace myos::drivers;
 
 extern uint64_t tick;
 
- Panel::Panel(Widget* parent,
+WinScreen::WinScreen(gui::Widget* parent,
+                   common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
+                   common::uint8_t r, common::uint8_t g, common::uint8_t b)
+: Widget(parent, x, y, w, h, r, g, b)
+{
+
+}
+
+WinScreen::~WinScreen()
+{
+}
+
+void WinScreen::Draw(common::GraphicsContext* gc)
+{
+    Widget::Draw(gc);
+
+    gc->DrawString("Win!", w/2 - 16, h/2, 0xFF, 0xFF, 0xFF);
+}
+
+void WinScreen::OnKeyDown(char c)
+{
+    if (c == '\n')
+    {
+        //((CompositeWidget*)this->parent)->DeleteChild(this);
+
+        //Widget* menu = new Menu(this, (w-200)/2, (h-100)/2, 200, 100, 0x00, 0x00, 0xA8);
+        //((CompositeWidget*)this->parent)->AddChild(menu);
+        //((CompositeWidget*)this->parent)->GetFocus(menu);
+
+        //delete (void*)this;
+    }
+}
+
+Panel::Panel(Widget* parent,
                    int32_t x, int32_t y, int32_t w, int32_t h,
                    uint8_t r, uint8_t g, uint8_t b, bool is_physical)
 : Widget(parent, x, y, w, h, r, g, b)
@@ -58,12 +92,25 @@ Panel::~Panel()
     return false;
  }
 
+ bool Panel::IsPhysical()
+ {
+    return this->is_physical;
+ }
+
 TargetPanel::TargetPanel(Widget* parent,
                    int32_t x, int32_t y, int32_t w, int32_t h,
-                   uint8_t r, uint8_t g, uint8_t b, bool is_physical, uint32_t lifes)
+                   uint8_t r, uint8_t g, uint8_t b,
+                    bool is_physical, uint32_t lifes)
 : Panel(parent, x, y, w, h, r, g, b, is_physical)
 {
+    // 1 life - white
+    // 2 lifes - green
+    // 3 lifes - blue
+    // 4 lifes - red
+    // 0 lifes - black & is_physical = false
+
     this->lifes = lifes;
+    ChangeColor();
 }
 
 TargetPanel::~TargetPanel()
@@ -77,18 +124,50 @@ bool TargetPanel::IsHit(common::int32_t ball_x, common::int32_t ball_y, common::
         LifesDecrement();
         return true;
     }
-
+    return false;
 }
 
 void TargetPanel::LifesDecrement()
 {
-    lifes--;
-    //if (lifes < 0)
-    //{
-    //    delete this;
-    //}
+    this->lifes--;
+    if (lifes == 0) {
+        this->is_physical = false;
+    }
+
+    ChangeColor();
 }
 
+void TargetPanel::ChangeColor()
+{
+    switch(lifes)
+        {
+        case 0:
+            r = 0x00;
+            g = 0x00;
+            b = 0x00;
+            break;
+        case 1:
+            r = 0xFF;
+            g = 0xFF;
+            b = 0xFF;
+            break;
+        case 2:
+            r = 0x00;
+            g = 0xA8;
+            b = 0x00;
+            break;
+        case 3:
+            r = 0x00;
+            g = 0x00;
+            b = 0xA8;
+            break;
+        default:
+            r = 0xA8;
+            g = 0x00;
+            b = 0x00;
+            break;
+        }
+}
 
  Platform::Platform(Widget* parent,
                    int32_t x, int32_t y, int32_t w, int32_t h,
@@ -117,11 +196,18 @@ void Platform::OnKeyDown(char c)
             this->MoveRight();
             break;
         case 'f':
-            ChangeToBallMode();
+            if (mode == 0){
+                ChangeToBallMode();
+            }
             break;
         default:
             break;
     }
+}
+
+void Platform::SetModeZero()
+{
+    this->mode = 0;
 }
 
 void Platform::MoveLeft()
@@ -140,6 +226,7 @@ void Platform::MoveRight()
 
 void Platform::ChangeToBallMode()
 {
+    mode++;
     RandomGenerator rand(42);
 
     int8_t vector_x = 0;
@@ -208,11 +295,6 @@ Ball::~Ball()
 
 void Ball::Draw(GraphicsContext* gc) 
 {
-    //int32_t X = 0;
-    //int32_t Y = 0;
-    //ModelToScreen(X, Y);
-
-    //gc->DrawCircle(X, Y, rad, r, g, b);
     Widget::Draw(gc);
 
     Move();
@@ -254,24 +336,42 @@ ArkanoidGame::ArkanoidGame(Widget* parent,
                    uint8_t r, uint8_t g, uint8_t b)
 : CompositeWidget(parent, x, y, w, h, r, g, b)
 {
+    // Create panels
+    int32_t cnt = 1;
+    for (int32_t j = 0; j < 3; j++) {
+        for (int32_t i = 0; i < w; i+= 40) {
+        
+            TargetPanel* p1 = new TargetPanel(this, i, j*10, 40, 10, 0xFF, 0xFF, 0xFF, true, /*cnt++*/ 1);
+            this->AddChild(p1);
+            panels[num_of_panels] = (Panel*)p1;
+            num_of_panels++;
+            
+            if (cnt == 4)
+            {
+                cnt = 1;
+            }
+        }
+    }
+    
     // Create moving platform
     platform = new Platform(this, w/2 - PLATFORM_WIDTH/2, h - PLATFORM_HEIGHT - 2, PLATFORM_WIDTH, PLATFORM_HEIGHT, 
     0xFF, 0xFF, 0xFF, true, x, x + w, PLATFORM_SPEED);
     this->AddChild(platform);
     this->GetFocus(platform);
-    platforms[num_of_platforms] = (Panel*)platform;
-    num_of_platforms++;
+    panels[num_of_panels] = (Panel*)platform;
+    num_of_panels++;
 
-    // Create panels
-    TargetPanel* p1 = new TargetPanel(this, w/2, 10, 40, 10, 0xA8, 0x00, 0x00, true, 1);
-    this->AddChild(p1);
-    platforms[num_of_platforms] = (Panel*)p1;
-    num_of_platforms++;
+    
 }
 
 ArkanoidGame::~ArkanoidGame() 
 {
+    DeleteBall();
+    DeletePlatform();
 
+    for (int i = 0; i < numChildren; i++) {
+        delete (void*)children[i];
+    }
 }
 
 void ArkanoidGame::Draw(common::GraphicsContext* gc)
@@ -282,7 +382,18 @@ void ArkanoidGame::Draw(common::GraphicsContext* gc)
     int32_t Y = ball->GetY();
     int32_t rad = ball->GetRad();
 
-    if (X <= 0 || X >= w) 
+    if (Y >= h) {
+        platform->SetModeZero();
+        DeleteBall();
+    }
+
+    // After hit we can check that all platforms are not physicaly and if this is true we can write congrac
+    if(this->CheckWin())
+    {
+        ShowWinScreen();
+    }
+
+    if (X <= 0 || X + rad + BALL_SPEED >= w) 
     {
         ball->ChangeVectorX();
         return;
@@ -294,9 +405,9 @@ void ArkanoidGame::Draw(common::GraphicsContext* gc)
         return;
     }
     
-    for (int i = 0; i < this->num_of_platforms; i++) {
+    for (int i = 0; i < this->num_of_panels; i++) {
         bool IsXHit;
-        if(platforms[i]->IsHit(X, Y, rad, IsXHit)) {
+        if(panels[i]->IsHit(X, Y, rad, IsXHit)) {
             if (IsXHit) {
                 ball->ChangeVectorX();
                 return;
@@ -313,4 +424,41 @@ void ArkanoidGame::Draw(common::GraphicsContext* gc)
 void ArkanoidGame::SetBall(Ball* ball)
 {
     this->ball = ball;
+}
+
+bool ArkanoidGame::CheckWin()
+{
+    // first panel is always players movig platform so start check from 1st
+    for(int i = 1; i < num_of_panels; i++) {
+        if (panels[i]->IsPhysical()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void ArkanoidGame::ShowWinScreen()
+{
+    DeleteBall();
+    DeletePlatform();
+
+    ((CompositeWidget*)this->parent)->DeleteChild(this);
+
+    Widget* win = new WinScreen(this->parent, 0, 0, w, h, 0x00, 0xA8, 0x00);
+    ((CompositeWidget*)this->parent)->AddChild(win);
+    ((CompositeWidget*)this->parent)->GetFocus(win);
+}
+
+void ArkanoidGame::DeleteBall()
+{
+    DeleteChild(ball);
+    delete (void*)ball;
+    this->ball = 0;
+}
+
+void ArkanoidGame::DeletePlatform()
+{
+    DeleteChild(platform);
+    delete (void*)platform;
+    this->platform = 0;
 }

@@ -51,8 +51,10 @@ Menu::~Menu()
 }
 
 void Menu::Draw(common::GraphicsContext* gc){
-    CompositeWidget::Draw(gc);
-    gc->DrawRectangle(x, y, w, h, 0xFF, 0xFF, 0xFF);
+    //if(is_visible){
+        CompositeWidget::Draw(gc);
+        gc->DrawRectangle(x, y, w, h, 0xFF, 0xFF, 0xFF);
+    //}
 }
 
 void Menu::OnKeyDown(char c)
@@ -80,6 +82,11 @@ void Menu::OnKeyDown(char c)
             break;
     }
     cursor->MoveCursor(cur_punkt);
+}
+
+void Menu::SetVisible(bool is_visible)
+{
+    this->is_visible = is_visible;
 }
 
 
@@ -162,6 +169,8 @@ void GamePunkt::Run()
     // Delete menu from Desktop
     desktop->DeleteChild(this->parent);
     delete (void*)this->parent;
+    //((Menu*)this->parent)->SetVisible(false);
+
 }
 
 Cursor::Cursor(Widget* parent,

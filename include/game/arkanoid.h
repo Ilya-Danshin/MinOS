@@ -9,6 +9,20 @@ namespace myos
     namespace game
     {
         
+        class WinScreen : public gui::Widget
+        {
+        public:
+            WinScreen(gui::Widget* parent,
+                   common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
+                   common::uint8_t r, common::uint8_t g, common::uint8_t b);
+
+            ~WinScreen();
+
+            void Draw(common::GraphicsContext* gc);
+
+            void OnKeyDown(char c);
+        };
+        
         class Panel : public gui::Widget
         {
         public:
@@ -18,8 +32,8 @@ namespace myos
             ~Panel();
 
             virtual bool IsHit(common::int32_t ball_x, common::int32_t ball_y, common::int32_t ball_rad, bool& isXHit);
-
-        private:
+            virtual bool IsPhysical();
+        protected:
             bool is_physical;
         };
 
@@ -38,6 +52,7 @@ namespace myos
             common::uint32_t lifes;
 
             void LifesDecrement();
+            void ChangeColor();
         };
         
         class Platform : public Panel
@@ -50,20 +65,20 @@ namespace myos
             ~Platform();
 
             void OnKeyDown(char c);
+            void SetModeZero();
         private:
             common::uint32_t x_left_border;
             common::uint32_t x_right_border;
             
             common::int8_t speed;
 
+            common::int8_t mode = 0;
+
             void MoveLeft();
             void MoveRight();
 
             void ChangeToBallMode();
         };
-
-        
-        // TODO: Create common class for game platform (that user move) and for palatforms-enemy
 
         class Ball : public gui::Widget
         {
@@ -105,12 +120,20 @@ namespace myos
             void Draw(common::GraphicsContext* gc);
 
             void SetBall(Ball* ball);
+
         private:
             Platform* platform;
             Ball* ball;
 
-            common::uint32_t num_of_platforms = 0;
-            Panel* platforms[128];
+            common::uint32_t num_of_panels = 0;
+            Panel* panels[128];
+
+            bool CheckWin();
+
+            void ShowWinScreen();
+
+            void DeleteBall();
+            void DeletePlatform();
         };
     }
 }

@@ -124,7 +124,9 @@ void CompositeWidget::DeleteChild(Widget* child)
 void CompositeWidget::Draw(GraphicsContext* gc)
 {
     Widget::Draw(gc);
-    for(int i = numChildren-1; i >= 0; --i)
+    //for(int i = numChildren-1; i >= 0; --i)
+    //    children[i]->Draw(gc);
+    for(int i = 0; i < numChildren; i++)
         children[i]->Draw(gc);
 }
 

@@ -69,7 +69,9 @@ namespace myos
             Cursor* cursor;
 
             common::int8_t num_of_punkts = 0;
-            common::int8_t cur_punkt = 0;            
+            common::int8_t cur_punkt = 0;  
+
+            bool is_visible = true;          
         public:
             Menu(Widget* parent,
                    common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
@@ -78,6 +80,8 @@ namespace myos
 
             void Draw(common::GraphicsContext* gc);
             void OnKeyDown(char c);
+
+            void SetVisible(bool is_visible);
         };
 
         class Title : public Widget {
