@@ -9,12 +9,43 @@ namespace myos
     namespace game
     {
         
-        class Platform : public gui::Widget
+        class Panel : public gui::Widget
+        {
+        public:
+            Panel(gui::Widget* parent,
+                   common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
+                   common::uint8_t r, common::uint8_t g, common::uint8_t b, bool is_physical);
+            ~Panel();
+
+            virtual bool IsHit(common::int32_t ball_x, common::int32_t ball_y, common::int32_t ball_rad, bool& isXHit);
+
+        private:
+            bool is_physical;
+        };
+
+        class TargetPanel : public Panel
+        {
+        public:
+            TargetPanel(gui::Widget* parent,
+                   common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
+                   common::uint8_t r, common::uint8_t g, common::uint8_t b, bool is_physical, common::uint32_t lifes);
+
+            ~TargetPanel();
+
+            bool IsHit(common::int32_t ball_x, common::int32_t ball_y, common::int32_t ball_rad, bool& isXHit);
+
+        private:
+            common::uint32_t lifes;
+
+            void LifesDecrement();
+        };
+        
+        class Platform : public Panel
         {
         public:
             Platform(gui::Widget* parent,
                    common::int32_t x, common::int32_t y, common::int32_t w, common::int32_t h,
-                   common::uint8_t r, common::uint8_t g, common::uint8_t b, 
+                   common::uint8_t r, common::uint8_t g, common::uint8_t b, bool is_physical,
                    common::uint32_t left_border, common::uint32_t right_border, common::int8_t speed);
             ~Platform();
 
@@ -45,7 +76,7 @@ namespace myos
 
             void Draw(common::GraphicsContext* gc);
 
-            void MoveHandler();
+            void Move();
 
             common::int32_t GetX();
             common::int32_t GetY();
@@ -77,6 +108,9 @@ namespace myos
         private:
             Platform* platform;
             Ball* ball;
+
+            common::uint32_t num_of_platforms = 0;
+            Panel* platforms[128];
         };
     }
 }
