@@ -121,6 +121,8 @@ namespace myos
 
             void SetBall(Ball* ball);
 
+            void GetBackgroudColor(common::uint8_t& r, common::uint8_t& g, common::uint8_t& b);
+
         private:
             Platform* platform;
             Ball* ball;

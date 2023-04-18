@@ -141,11 +141,6 @@ void TargetPanel::ChangeColor()
 {
     switch(lifes)
         {
-        case 0:
-            r = 0x00;
-            g = 0x00;
-            b = 0x00;
-            break;
         case 1:
             r = 0xFF;
             g = 0xFF;
@@ -166,10 +161,21 @@ void TargetPanel::ChangeColor()
             g = 0x00;
             b = 0x00;
             break;
+        case 0:
+            uint8_t r = 0x00;
+            uint8_t g = 0x00;
+            uint8_t b = 0x00;
+
+            ((ArkanoidGame*)this->parent)->GetBackgroudColor(r, g, b);
+
+            this->r = r;
+            this->g = g;
+            this->b = b;
+            break;
         }
 }
 
- Platform::Platform(Widget* parent,
+Platform::Platform(Widget* parent,
                    int32_t x, int32_t y, int32_t w, int32_t h,
                    uint8_t r, uint8_t g, uint8_t b, bool is_physical,
                    uint32_t left_border, uint32_t right_border, int8_t speed)
@@ -341,7 +347,7 @@ ArkanoidGame::ArkanoidGame(Widget* parent,
     for (int32_t j = 0; j < 3; j++) {
         for (int32_t i = 0; i < w; i+= 40) {
         
-            TargetPanel* p1 = new TargetPanel(this, i, j*10, 40, 10, 0xFF, 0xFF, 0xFF, true, /*cnt++*/ 1);
+            TargetPanel* p1 = new TargetPanel(this, i, j*10, 40, 10, 0xFF, 0xFF, 0xFF, true, cnt++ /*1*/);
             this->AddChild(p1);
             panels[num_of_panels] = (Panel*)p1;
             num_of_panels++;
@@ -352,6 +358,12 @@ ArkanoidGame::ArkanoidGame(Widget* parent,
             }
         }
     }
+
+    // 1 panel for win demonstration
+    //TargetPanel* p1 = new TargetPanel(this, w/2 + 20, 0, 40, 10, 0xFF, 0xFF, 0xFF, true, 1);
+    //this->AddChild(p1);
+    //panels[num_of_panels] = (Panel*)p1;
+    //num_of_panels++;
     
     // Create moving platform
     platform = new Platform(this, w/2 - PLATFORM_WIDTH/2, h - PLATFORM_HEIGHT - 2, PLATFORM_WIDTH, PLATFORM_HEIGHT, 
@@ -426,10 +438,18 @@ void ArkanoidGame::SetBall(Ball* ball)
     this->ball = ball;
 }
 
+
+void ArkanoidGame::GetBackgroudColor(uint8_t& r, uint8_t& g, uint8_t& b)
+{
+    r = this->r;
+    g = this->g;
+    b = this->b;
+}
+
 bool ArkanoidGame::CheckWin()
 {
-    // first panel is always players movig platform so start check from 1st
-    for(int i = 1; i < num_of_panels; i++) {
+    // last panel is always players movig platform so start check from 1st
+    for(int i = 0; i < num_of_panels - 1; i++) {
         if (panels[i]->IsPhysical()) {
             return false;
         }
